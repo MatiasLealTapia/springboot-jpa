@@ -24,18 +24,28 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		findOne();
+		create();
+	}
+
+	public void create() {
+		Person person = new Person(null, "Lalo", "Thor", "Phyton");
+		Person personNew = repository.save(person);
+		System.out.println(personNew);
 	}
 
 	public void findOne() {
 		// Person person = null;
-		// Optional<Person> optionalPerson = repository.findById(9L);
+		// Optional<Person> optionalPerson = repository.findById(1L);
 		// if (optionalPerson.isPresent()) {
+		// 	person = optionalPerson.get();
+		// }
+		// if (!optionalPerson.isEmpty()) {
 		// 	person = optionalPerson.get();
 		// }
 		// System.out.println(person);
 		// repository.findById(1L).ifPresent(person -> System.out.println(person));
-		repository.findById(1L).ifPresent(System.out::println);
+		// repository.findOne(1L).ifPresent(System.out::println);
+		repository.findByNameContaining("ri").ifPresent(System.out::println);
 	}
 
 	public void list() {
