@@ -26,7 +26,46 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		create();
+		delete();
+	}
+
+	@Transactional
+	public void delete() {
+		repository.findAll().forEach(System.out::println);
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Ingrese ID de la persona a eliminar:");
+		Long id = scanner.nextLong();
+		repository.deleteById(id);
+
+		repository.findAll().forEach(System.out::println);
+		scanner.close();
+	}
+
+	@Transactional
+	public void update() {
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Ingrese ID de la persona a editar:");
+		Long id = scanner.nextLong();
+		Optional<Person> optionalPerson = repository.findById(id);
+
+		// optionalPerson.ifPresent(person -> {
+		if (optionalPerson.isPresent()) {
+			Person person = optionalPerson.orElseThrow();
+
+			System.out.println(person);
+			System.out.println("Ingrese el lenguaje de programación:");
+			String programmingLanguage = scanner.next();
+			person.setProgrammingLanguage(programmingLanguage);
+			Person personDb = repository.save(person);
+			System.out.println(personDb);
+		} else {
+			System.out.println("El usuario no existe!");
+		}
+		// });
+
+		scanner.close();
 	}
 
 	@Transactional
@@ -45,7 +84,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		System.out.println(personNew);
 
 		repository.findById(personNew.getId()).ifPresent(System.out::println);
-		
+
 	}
 
 	@Transactional(readOnly = true)
@@ -53,10 +92,10 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		// Person person = null;
 		// Optional<Person> optionalPerson = repository.findById(1L);
 		// if (optionalPerson.isPresent()) {
-		// 	person = optionalPerson.get();
+		// person = optionalPerson.get();
 		// }
 		// if (!optionalPerson.isEmpty()) {
-		// 	person = optionalPerson.get();
+		// person = optionalPerson.get();
 		// }
 		// System.out.println(person);
 		// repository.findById(1L).ifPresent(person -> System.out.println(person));
@@ -67,13 +106,14 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Transactional(readOnly = true)
 	public void list() {
 		// List<Person> persons = (List<Person>) repository.findAll();
-		// List<Person> persons = (List<Person>) repository.buscarByProgrammingLanguage("Java", "Andres");
+		// List<Person> persons = (List<Person>)
+		// repository.buscarByProgrammingLanguage("Java", "Andres");
 
 		List<Person> persons = (List<Person>) repository.findByProgrammingLanguageAndName("Java", "Andres");
 		persons.stream().forEach(person -> System.out.println(person));
 
 		List<Object[]> personsValues = repository.obtenerPersonDataByProgrammingLanguage("Java");
-		personsValues.stream().forEach(person ->{
+		personsValues.stream().forEach(person -> {
 			System.out.println(person[0] + " es experto en " + person[1]);
 		});
 	}
