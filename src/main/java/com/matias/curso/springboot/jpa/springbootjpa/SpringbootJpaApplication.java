@@ -39,6 +39,7 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		Long id = scanner.nextLong();
 		scanner.close();
 
+		System.out.println("===== Mostrando solo");
 		String name = repository.getNameById(id);
 		System.out.println(name);
 
@@ -47,6 +48,9 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 
 		String fullName = repository.getFullNameById(id);
 		System.out.println(fullName);
+
+		System.out.println("Consulta por campos personalizados por el ID: ");
+		Object[] personReg = repository.obtenerPersonDataById(idDb);
 	}
 
 	@Transactional
